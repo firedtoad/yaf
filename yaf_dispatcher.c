@@ -832,7 +832,7 @@ int yaf_dispatcher_route(yaf_dispatcher_t *dispatcher, yaf_request_t *request) /
 /* }}} */
 
 yaf_response_t *yaf_dispatcher_dispatch(yaf_dispatcher_t *dispatcher, zval *response_ptr) /* {{{ */ {
-	zval *return_response, *plugins, *view, rv = {{0}};
+	zval *return_response, *plugins, *view, rv;
 	yaf_response_t *response;
 	yaf_request_t *request;
 	uint nesting = YAF_G(forward_limit);
@@ -870,6 +870,7 @@ yaf_response_t *yaf_dispatcher_dispatch(yaf_dispatcher_t *dispatcher, zval *resp
 	YAF_PLUGIN_HANDLE(plugins, YAF_PLUGIN_HOOK_LOOPSTARTUP, request, response);
 	YAF_EXCEPTION_HANDLE(dispatcher, request, response);
 
+	ZVAL_UNDEF(&rv);
 	view = yaf_dispatcher_init_view(dispatcher, NULL, NULL, &rv);
 	if (!view) {
 		return NULL;
@@ -1313,7 +1314,7 @@ PHP_METHOD(yaf_dispatcher, __clone) {
 */
 zend_function_entry yaf_dispatcher_methods[] = {
 	PHP_ME(yaf_dispatcher, __construct, 			NULL, 					ZEND_ACC_PRIVATE | ZEND_ACC_CTOR)
-	PHP_ME(yaf_dispatcher, __clone,				NULL, 					ZEND_ACC_PRIVATE | ZEND_ACC_CLONE)
+	PHP_ME(yaf_dispatcher, __clone,				NULL, 					ZEND_ACC_PRIVATE)
 	PHP_ME(yaf_dispatcher, __sleep,				NULL, 					ZEND_ACC_PRIVATE)
 	PHP_ME(yaf_dispatcher, __wakeup,			NULL, 					ZEND_ACC_PRIVATE)
 	PHP_ME(yaf_dispatcher, enableView,			yaf_dispatcher_void_arginfo,  		ZEND_ACC_PUBLIC)

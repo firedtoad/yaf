@@ -425,7 +425,6 @@ PHP_METHOD(yaf_application, __clone) {
 PHP_METHOD(yaf_application, run) {
 	zval              *running;
 	yaf_dispatcher_t  *dispatcher;
-	yaf_response_t	  *response, rresponse;
 	yaf_application_t *self = getThis();
 
 	running = zend_read_property(yaf_application_ce, self,
@@ -440,12 +439,9 @@ PHP_METHOD(yaf_application, run) {
 	 * ZEND_STRL(YAF_APPLICATION_PROPERTY_NAME_RUN), running); */
 	dispatcher = zend_read_property(yaf_application_ce, self,
 			ZEND_STRL(YAF_APPLICATION_PROPERTY_NAME_DISPATCHER), 1, NULL);
-	ZVAL_NULL(&rresponse);
-	if ((response = yaf_dispatcher_dispatch(dispatcher, &rresponse))) {
-		RETURN_ZVAL(response, 1, 1);
+	if (yaf_dispatcher_dispatch(dispatcher, return_value) == NULL) {
+		RETURN_FALSE;
 	}
-
-	RETURN_FALSE;
 }
 /* }}} */
 
@@ -655,7 +651,7 @@ zend_function_entry yaf_application_methods[] = {
 	PHP_ME(yaf_application, getLastErrorMsg,     yaf_application_void_arginfo,         ZEND_ACC_PUBLIC)
 	PHP_ME(yaf_application, clearLastError,      yaf_application_void_arginfo,         ZEND_ACC_PUBLIC)
 	PHP_ME(yaf_application, __destruct,          NULL,                     ZEND_ACC_PUBLIC | ZEND_ACC_DTOR)
-	PHP_ME(yaf_application, __clone,             NULL,                     ZEND_ACC_PRIVATE | ZEND_ACC_CLONE)
+	PHP_ME(yaf_application, __clone,             NULL,                     ZEND_ACC_PRIVATE)
 	PHP_ME(yaf_application, __sleep,             NULL,                     ZEND_ACC_PRIVATE)
 	PHP_ME(yaf_application, __wakeup,            NULL,                     ZEND_ACC_PRIVATE)
 	{NULL, NULL, NULL}

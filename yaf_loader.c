@@ -671,7 +671,7 @@ PHP_METHOD(yaf_loader, autoload) {
 /* }}} */
 
 		file_name_len = class_name_len;
-		file_name     = class_name;
+		file_name     = estrndup(class_name, class_name_len);
 
 	} while(0);
 
@@ -717,9 +717,8 @@ out:
 	if (dup_lcname) {
 		efree(dup_lcname);
 	}
-	if (file_name != class_name) {
-		efree(file_name);
-	}
+	efree(file_name);
+
 	RETURN_BOOL(ret);
 }
 /* }}} */
@@ -764,7 +763,7 @@ PHP_FUNCTION(yaf_override_spl_autoload) {
 */
 zend_function_entry yaf_loader_methods[] = {
 	PHP_ME(yaf_loader, __construct, yaf_loader_void_arginfo, ZEND_ACC_PRIVATE|ZEND_ACC_CTOR)
-	PHP_ME(yaf_loader, __clone, NULL, ZEND_ACC_PRIVATE|ZEND_ACC_CLONE)
+	PHP_ME(yaf_loader, __clone, NULL, ZEND_ACC_PRIVATE)
 	PHP_ME(yaf_loader, __sleep, NULL, ZEND_ACC_PRIVATE)
 	PHP_ME(yaf_loader, __wakeup, NULL, ZEND_ACC_PRIVATE)
 	PHP_ME(yaf_loader, autoload, yaf_loader_autoloader_arginfo, ZEND_ACC_PUBLIC)
